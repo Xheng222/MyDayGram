@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_layout"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:background="@drawable/background_1">
+
+
+
+    <LinearLayout
+        android:id="@+id/content_layout"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="8dp"
+        tools:ignore="UselessParent"
+        android:background="@drawable/background_2"
+        >
+
+        <com.xheng.mydaygram.ui.MyTextView
+            android:id="@+id/show_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="19dp"
+            android:textColor="@color/black"
+            android:textSize="32sp"
+            app:fontName="Arvil_Sans" />
+
+        <View
+            android:id="@+id/underline"
+            android:layout_width="match_parent"
+            android:layout_height="1.9dp"
+            android:layout_marginStart="54.2dp"
+            android:layout_marginEnd="54.2dp"
+            android:layout_marginTop="18.2dp"
+            android:background="@color/black" />
+
+
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ScrollView
+                android:id="@+id/scroll_view"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_marginTop="21dp"
+                android:layout_marginBottom="20dp"
+                android:layout_marginStart="24.2dp"
+                android:layout_marginEnd="24.2dp"
+                android:scrollbars="none">
+
+                <EditText
+                    android:id="@+id/diary_editor"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minLines="70"
+                    android:gravity="top"
+                    android:textCursorDrawable="@drawable/text_cursor"
+                    android:inputType="textMultiLine|textFilter"
+                    android:lineSpacingExtra="4.4dp"
+                    android:textSize="15.3sp"
+                    android:textColor="@color/black"
+                    android:hint="@null"
+                    android:background="@android:color/transparent"
+                    android:importantForAutofill="no"
+                    />
+
+            </ScrollView>
+
+            <FrameLayout
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginStart="11.2dp"
+                android:layout_marginEnd="14.2dp">
+
+
+            </FrameLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floating_addTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginBottom="8dp"
+        app:borderWidth="0dp"
+        app:backgroundTint="@color/global"
+        app:rippleColor="@color/global"
+        app:elevation="0dp"
+        app:pressedTranslationZ="0dp"
+        android:layout_gravity="bottom"
+        android:src="@drawable/button_add_time"
+        android:contentDescription="@string/app_name" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floating_done"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="8dp"
+        app:borderWidth="0dp"
+        app:backgroundTint="@color/global"
+        app:rippleColor="@color/global"
+        app:elevation="0dp"
+        app:pressedTranslationZ="0dp"
+        android:stateListAnimator="@null"
+        android:layout_gravity="bottom|end"
+        android:src="@drawable/button_done"
+        android:contentDescription="@string/app_name" />
+
+
+</FrameLayout>

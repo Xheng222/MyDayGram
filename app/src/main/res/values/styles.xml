@@ -1,0 +1,48 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryDark">#F2F1ED</item>
+        <item name="colorAccent">@android:color/transparent</item>
+        <item name="alertDialogTheme">@style/AppCompatAlertDialogStyle</item>
+        <item name="android:windowLightStatusBar">@color/colorPrimaryDark</item>
+    </style>
+
+    <style name="AppCompatAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert" />
+
+
+    <style name="ChooserDialog" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:background">@color/global</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <!--
+        // 设置 Dialog 没有边框
+        <item name="android:windowFrame">@null</item>
+        // 设置 Dialog 没有标题
+        <item name="android:windowNoTitle">true</item>
+        // 设置 Dialog 的背景颜色
+        <item name="android:background">@color/globalBg</item>
+        // 设置 Dialog 弹出时整个 Dialog 窗口的背景颜色为透明
+        <item name="android:windowBackground">@@android:color/transparent</item>
+        // 设置 Dialog 浮动在 Activity 上
+        <item name="android:windowIsFloating">true</item>
+        // 设置 Dialog 的背景是否模糊
+        <item name="android:backgroundDimEnabled">false</item>
+        // 设置 Dialog 启动时没有闪屏页
+        <item name="android:windowContentOverlay">@null</item>
+    -->
+
+    <style name="ChooserAnimation">
+        <item name="android:windowEnterAnimation">@anim/dialog_in</item>
+        <item name="android:windowExitAnimation">@anim/dialog_out</item>
+    </style>
+
+</resources>
