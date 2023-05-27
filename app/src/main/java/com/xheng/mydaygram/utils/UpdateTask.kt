@@ -25,7 +25,7 @@ class UpdateTask {
             val str = StringBuilder()
             try {
                 val uc = url.openConnection()
-                val read = BufferedReader(InputStreamReader(uc.getInputStream(), "UTF-8"))
+                val read = BufferedReader(InputStreamReader(uc.getInputStream(), "GBK"))
                 var inputLine: String? = null
                 inputLine = read.readLine()
                 while (inputLine != null) {
