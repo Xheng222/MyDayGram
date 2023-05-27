@@ -1,7 +1,6 @@
 package com.xheng.mydaygram.fragments
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
@@ -334,7 +333,7 @@ class PasswordFragment: BaseFragment() {
     }
 
     override fun onPause() {
-        val manager = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val manager = requireActivity().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         manager.hideSoftInputFromWindow(view.windowToken, 0)
 //        if (mode != 1) (activity as MainActivity).freshSet()
         super.onPause()

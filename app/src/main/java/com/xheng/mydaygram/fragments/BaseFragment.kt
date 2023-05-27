@@ -1,6 +1,5 @@
 package com.xheng.mydaygram.fragments
 
-import android.os.Bundle
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.fragment.app.Fragment

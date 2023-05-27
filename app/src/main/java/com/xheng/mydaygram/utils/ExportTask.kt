@@ -10,8 +10,6 @@ import org.litepal.extension.find
 class ExportTask {
     private val app = MyLitePalApplication.getInstance()
 
-    private val res = app.resources
-
     // 定义导出的内容
     private lateinit var diary: String
 

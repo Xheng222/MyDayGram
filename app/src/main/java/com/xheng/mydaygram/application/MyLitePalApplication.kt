@@ -2,7 +2,6 @@ package com.xheng.mydaygram.application
 
 import android.annotation.SuppressLint
 import android.app.Application
-import android.graphics.Bitmap
 import android.graphics.Typeface
 import org.litepal.LitePal
 import org.litepal.LitePalApplication.getContext

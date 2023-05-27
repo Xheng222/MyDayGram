@@ -3,7 +3,6 @@ package com.xheng.mydaygram.fragments
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Typeface
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
@@ -16,12 +15,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import androidx.core.content.ContextCompat
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.xheng.mydaygram.MainActivity
 import com.xheng.mydaygram.R
 import com.xheng.mydaygram.model.Diary
 import com.xheng.mydaygram.ui.MyTextView

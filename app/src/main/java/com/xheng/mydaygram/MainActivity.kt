@@ -2,9 +2,7 @@ package com.xheng.mydaygram
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.KeyEvent
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentTransaction
 import com.xheng.mydaygram.application.MyLitePalApplication

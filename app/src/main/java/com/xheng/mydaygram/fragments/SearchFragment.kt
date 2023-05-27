@@ -5,7 +5,6 @@ import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,16 +13,11 @@ import android.widget.AdapterView
 import android.widget.EditText
 import android.widget.ListView
 import android.widget.TextView
-import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
-import com.xheng.mydaygram.R
 import com.xheng.mydaygram.MainActivity
+import com.xheng.mydaygram.R
 import com.xheng.mydaygram.adapter.SearchAdapter
 import com.xheng.mydaygram.model.Diary
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.litepal.LitePal
 import org.litepal.extension.find
 import java.util.*
@@ -126,26 +120,6 @@ class SearchFragment: BaseFragment(), AdapterView.OnItemClickListener, TextWatch
         } else {
             this.diaries.clear()
             animate()
-        }
-    }
-
-    fun fresh(){
-        // 当关键字内容不为空时
-        if (keyWords != null) {
-            // 查询匹配的日记内容
-            val results = LitePal.where("diary like ?", "%$keyWords%")
-                .order("year, month, day")
-                .find<Diary>()
-            // 清除上一次的搜索结果
-            this.diaries.clear()
-            // 添加新的搜索结果
-            this.diaries.addAll(results)
-            // 设置关键字到适配器
-            searchAdapter.setkeyWords(keyWords)
-
-            animate()
-            // 刷新界面
-            //searchAdapter.notifyDataSetChanged()
         }
     }
 

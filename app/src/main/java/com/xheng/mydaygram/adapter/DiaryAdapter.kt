@@ -3,7 +3,6 @@ package com.xheng.mydaygram.adapter
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
-import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -29,7 +28,7 @@ class DiaryAdapter(
 
     // 内部 ViewHolder 类
     class ViewHolder(
-        val itemView: View
+        itemView: View
     ){
         val dot: ImageView = itemView.findViewById(R.id.dot)
         val diary1: LinearLayout = itemView.findViewById(R.id.diary1_layout)
