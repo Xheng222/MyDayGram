@@ -12,7 +12,6 @@ open class BaseFragment: Fragment() {
     protected var app: MyLitePalApplication = MyLitePalApplication.getInstance()
 
     // 这个类为所有 fragment 设置进入与退出动画
-
     override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
         return if (enter)
             AnimationUtils.loadAnimation(activity, R.anim.activity_in)

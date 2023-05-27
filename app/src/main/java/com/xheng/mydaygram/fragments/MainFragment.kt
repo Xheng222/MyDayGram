@@ -13,13 +13,11 @@ import android.util.DisplayMetrics
 import android.util.Log
 import android.view.*
 import android.widget.*
-import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.xheng.mydaygram.MainActivity
 import com.xheng.mydaygram.R
-
 import com.xheng.mydaygram.adapter.ChooseMonthAdapter
 import com.xheng.mydaygram.adapter.ChooseYearAdapter
 import com.xheng.mydaygram.adapter.DiaryAdapter
@@ -115,11 +113,6 @@ class MainFragment: BaseFragment(), Runnable, View.OnClickListener, AdapterView.
         }
     }
 
-//    fun fresh() {
-//        loadDiary()
-//        refresh()
-//    }
-
     //刷新界面
     private fun refresh() {
         if(!isItemType2){
@@ -159,7 +152,7 @@ class MainFragment: BaseFragment(), Runnable, View.OnClickListener, AdapterView.
     }
 
     //加载日记
-    private fun loadDiary(){
+    private fun loadDiary(): Boolean{
         val results =
             LitePal.where("year = ? and month = ?", selectedYear.toString(), selectedMonth.toString())
                 .order("day")
@@ -167,9 +160,8 @@ class MainFragment: BaseFragment(), Runnable, View.OnClickListener, AdapterView.
 
         // 清空日记集合
         diaries.clear()
-
+        noDiary.isVisible = false
         if(isItemType2) {
-
             if (results.isEmpty()) {
                 noDiary.isVisible = true
             } else {
@@ -208,7 +200,9 @@ class MainFragment: BaseFragment(), Runnable, View.OnClickListener, AdapterView.
                 }
             }
         }
-
+        if (results.isEmpty())
+            return false
+        return true
     }
 
     private fun loadSettings(){
@@ -304,14 +298,6 @@ class MainFragment: BaseFragment(), Runnable, View.OnClickListener, AdapterView.
         Log.e("MyDayGram", "Main Fragment onStop")
         super.onStop()
     }
-
-//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-//        super.onViewCreated(view, savedInstanceState)
-//        Log.e("MyDayGram", selectDay.toString())
-//        super.onResume()
-//        loadSettings()
-//        isPause = false
-//    }
 
     override fun onResume() {
         super.onResume()
@@ -569,12 +555,15 @@ class MainFragment: BaseFragment(), Runnable, View.OnClickListener, AdapterView.
             .alpha(0f)
             .setDuration(135)
             .setListener(object: Animator.AnimatorListener{
-                override fun onAnimationStart(p0: Animator) {}
                 override fun onAnimationCancel(p0: Animator) {}
                 override fun onAnimationRepeat(p0: Animator) {}
+                override fun onAnimationStart(p0: Animator) {
+                    noDiary.animate()
+                        .alpha(0f)
+                        .setDuration(135)
+                        .setListener(null)
+                }
                 override fun onAnimationEnd(p0: Animator) {
-                    //myListView.visibility =View.INVISIBLE
-
                     // 设置对应的适配器
                     myListView.adapter = if (isItemType2) diaryAdapter2 else diaryAdapter1
 
@@ -587,25 +576,10 @@ class MainFragment: BaseFragment(), Runnable, View.OnClickListener, AdapterView.
 
                     // 播放动画
                     if (isItemType2) {
-                        Log.e("MyDayGram", "nodata")
-
                         noDiary.animate()
                             .alpha(1f)
                             .setDuration(135)
                             .setListener(null)
-                    } else {
-                        noDiary.animate()
-                            .alpha(0f)
-                            .setDuration(135)
-                            .setListener(object : Animator.AnimatorListener {
-                                override fun onAnimationStart(p0: Animator) {}
-                                override fun onAnimationCancel(p0: Animator) {}
-                                override fun onAnimationRepeat(p0: Animator) {}
-                                override fun onAnimationEnd(p0: Animator) {
-                                    Log.e("MyDayGram", "nodata false")
-                                    noDiary.isInvisible = true
-                                }
-                            })
                     }
                     myListView.animate()
                         .alpha(1f)

@@ -2,9 +2,10 @@
 <set xmlns:android="http://schemas.android.com/apk/res/android">
     <alpha
         android:interpolator="@android:anim/accelerate_interpolator"
-        android:duration="270"
+        android:duration="300"
         android:fromAlpha="0.0"
-        android:toAlpha="1.0"/>
+        android:toAlpha="1.0"
+        />
 
     <!--
     控制透明度的动画效果：alpha
