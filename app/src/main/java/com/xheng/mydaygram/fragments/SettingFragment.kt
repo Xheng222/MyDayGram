@@ -7,7 +7,6 @@ import android.content.SharedPreferences
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
@@ -18,8 +17,6 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.hjq.permissions.OnPermissionCallback
 import com.hjq.permissions.Permission
@@ -34,9 +31,6 @@ class SettingFragment: BaseFragment(), View.OnClickListener {
 
     // 定义设置
     private lateinit var settings: SharedPreferences
-
-    // 定义选择主题的按钮
-    private lateinit var selectTheme: Button
 
     // 定义设置字体大小的按钮数组
     private val fontSizes = arrayOfNulls<ImageButton>(5)
