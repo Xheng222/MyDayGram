@@ -26,6 +26,7 @@ import com.xheng.mydaygram.R
 import com.xheng.mydaygram.ui.MyTextView
 import com.xheng.mydaygram.utils.BackupTask
 import com.xheng.mydaygram.utils.ExportTask
+import com.xheng.mydaygram.utils.UpdateTask
 
 class SettingFragment: BaseFragment(), View.OnClickListener {
 
@@ -291,6 +292,8 @@ class SettingFragment: BaseFragment(), View.OnClickListener {
             // 评价按钮
             R.id.appraise -> {
                 Toast.makeText(requireContext(), "还是不要评价了吧...", Toast.LENGTH_SHORT).show()
+                val update = UpdateTask()
+                update.checkJSON()
             }
             R.id.use_sidebar_on -> {
                 useSideBar.isSelected = true
