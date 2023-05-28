@@ -140,12 +140,13 @@ class MainActivity : FragmentActivity() {
 
     fun toast(string: String): Job? {
         job?.cancel()
+        val update = UpdateTask()
         job = MainScope().async {
-            val update = UpdateTask()
             val json = update.checkJSON()
             Log.e("MyDayGram", json.getString("version"))
             Toast.makeText(applicationContext, "还是不要评价了吧...", Toast.LENGTH_SHORT).show()
         }
+        update.download(applicationContext)
         return job
     }
 
