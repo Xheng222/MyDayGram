@@ -6,8 +6,10 @@ import android.util.Log
 import android.widget.Toast
 import com.xheng.mydaygram.R
 import com.xheng.mydaygram.application.MyLitePalApplication
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -46,7 +48,9 @@ class BackupTask {
 
                         try {
                             // 创建副本文件
+                            withContext(Dispatchers.IO) {
                                 backupFile.createNewFile()
+                            }
                                 // 复制数据库到副本文件
                                 backFile(dataBaseFile, backupFile)
 

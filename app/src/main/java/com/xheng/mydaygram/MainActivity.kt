@@ -2,11 +2,15 @@ package com.xheng.mydaygram
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.KeyEvent
+import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentTransaction
 import com.xheng.mydaygram.application.MyLitePalApplication
 import com.xheng.mydaygram.fragments.*
+import com.xheng.mydaygram.utils.UpdateTask
+import kotlinx.coroutines.*
 
 
 class MainActivity : FragmentActivity() {
@@ -122,26 +126,28 @@ class MainActivity : FragmentActivity() {
     @SuppressLint("MissingSuperCall")
     override fun onSaveInstanceState(outState: Bundle) {
         // 阻止activity保存 fragment 的状态
-        //super.onSaveInstanceState(outState)
+        super.onSaveInstanceState(outState)
 
     }
 
-//    fun freshMainFragment() {
-//        MainFragment.fresh()
-//    }
-//
-//    fun freshSearch() {
-//        SearchFragment.fresh()
-//    }
-//
-//    fun freshSet() {
-//        SettingFragment.loadSettings()
-//    }
+    private var job: Job? = null
+    override fun onPause() {
+        job?.cancel()
+        super.onPause()
 
-//    override fun onPause() {
-//
-//
-//        super.onPause()
-//        Log.e("e", "a")
-//    }
+    }
+
+
+    fun toast(string: String): Job? {
+        job?.cancel()
+        job = MainScope().async {
+            val update = UpdateTask()
+            val json = update.checkJSON()
+            Log.e("MyDayGram", json.getString("version"))
+            Toast.makeText(applicationContext, "还是不要评价了吧...", Toast.LENGTH_SHORT).show()
+        }
+        return job
+    }
+
+
 }

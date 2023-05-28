@@ -19,4 +19,9 @@ open class BaseFragment: Fragment() {
             AnimationUtils.loadAnimation(activity, R.anim.activity_out)
     }
 
+    override fun onPause() {
+//        MainScope().cancel()
+        super.onPause()
+    }
+
 }

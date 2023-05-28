@@ -9,7 +9,6 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,7 +25,6 @@ import com.xheng.mydaygram.R
 import com.xheng.mydaygram.ui.MyTextView
 import com.xheng.mydaygram.utils.BackupTask
 import com.xheng.mydaygram.utils.ExportTask
-import com.xheng.mydaygram.utils.UpdateTask
 
 class SettingFragment: BaseFragment(), View.OnClickListener {
 
@@ -170,7 +168,7 @@ class SettingFragment: BaseFragment(), View.OnClickListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragmen_setting, container, false)
+        val view = inflater.inflate(R.layout.fragment_setting, container, false)
 
         // 获取设置
         settings = requireActivity().getSharedPreferences("settings", MODE_PRIVATE)
@@ -291,9 +289,8 @@ class SettingFragment: BaseFragment(), View.OnClickListener {
 
             // 评价按钮
             R.id.appraise -> {
-                Toast.makeText(requireContext(), "还是不要评价了吧...", Toast.LENGTH_SHORT).show()
-                val update = UpdateTask()
-                update.checkJSON()
+                (activity as MainActivity).toast("还是不要评价了吧...")
+
             }
             R.id.use_sidebar_on -> {
                 useSideBar.isSelected = true
@@ -436,14 +433,9 @@ class SettingFragment: BaseFragment(), View.OnClickListener {
 
             // 点击离开设置的按钮
             R.id.out_Setting -> {
-                activity?.onKeyDown(KeyEvent.KEYCODE_BACK, null)
+                (activity as MainActivity).pop()
             }
         }
     }
-
-//    override fun onPause() {
-//        (activity as MainActivity).freshMainFragment()
-//        super.onPause()
-//    }
 
 }

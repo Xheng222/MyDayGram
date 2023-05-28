@@ -1,9 +1,7 @@
 package com.xheng.mydaygram.utils
 
 import android.util.Log
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.IOException
@@ -14,34 +12,41 @@ import java.net.URL
 class UpdateTask {
     private val url = URL("http://47.94.131.162/download/ex.json")
 
-    private fun getJson() {
-
-
-    }
-
-    @OptIn(DelicateCoroutinesApi::class)
-    fun checkJSON() {
-        GlobalScope.launch {
-            val str = StringBuilder()
+    suspend fun checkJSON(): JSONObject {
+        val str = StringBuilder()
+        var json: JSONObject
+        val job = MainScope().async {
+            delay(3000)
             try {
-                val uc = url.openConnection()
-                val read = BufferedReader(InputStreamReader(uc.getInputStream(), "GBK"))
-                var inputLine: String? = null
-                inputLine = read.readLine()
+                val uc = withContext(Dispatchers.IO) {
+                    url.openConnection()
+                }
+                val read = BufferedReader(InputStreamReader(withContext(Dispatchers.IO) {
+                    uc.getInputStream()
+                }, "GBK"))
+                var inputLine: String?
+                inputLine = withContext(Dispatchers.IO) {
+                    read.readLine()
+                }
                 while (inputLine != null) {
                     Log.e("MyDayGram", inputLine)
                     str.append(inputLine)
-                    inputLine = read.readLine()
+                    inputLine = withContext(Dispatchers.IO) {
+                        read.readLine()
+                    }
                 }
-                read.close()
+                withContext(Dispatchers.IO) {
+                    read.close()
+                }
             } catch (e: MalformedURLException) {
                 e.printStackTrace()
             } catch (e: IOException) {
                 e.printStackTrace()
             }
-            val json = JSONObject(str.toString())
-            Log.e("MyDayGram", json.getString("version"))
+            json = JSONObject(str.toString())
+            json
         }
 
+        return job.await()
     }
 }
