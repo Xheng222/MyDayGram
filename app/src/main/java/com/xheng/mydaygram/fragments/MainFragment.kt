@@ -294,10 +294,6 @@ class MainFragment: BaseFragment(), Runnable, View.OnClickListener, AdapterView.
         return view
     }
 
-    override fun onStop() {
-        Log.e("MyDayGram", "Main Fragment onStop")
-        super.onStop()
-    }
 
     override fun onResume() {
         super.onResume()
@@ -352,7 +348,7 @@ class MainFragment: BaseFragment(), Runnable, View.OnClickListener, AdapterView.
         // 获取被点击的子项所对应的日记
         val diary = p0?.getItemAtPosition(p2) as Diary
         // 当被点击的子项所用于的日记内容不为空时，执行删除操作
-        if (diary.getDiary() != null) {
+        if (diary.getDiary() != "") {
             // 创建指定样式的对话框
             val dialog = AlertDialog.Builder(requireContext())
                 .setTitle("DayGram")

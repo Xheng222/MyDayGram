@@ -11,7 +11,9 @@
     <string name="context_delete_confirm">是否删除 %d-%d-%d 的日记？</string>
     <string name="button_cancel">取消</string>
     <string name="button_ok">确认</string>
-
+    <string name="button_download">下载</string>
+    <string name="button_download_complete">安装</string>
+    <string name="button_download_continue">正在下载</string>
     <string name="setting_version">版本</string>
     <string name="setting_send_feedback">[ 联系作者 ]</string>
     <string name="feedback_header">写邮件</string>
@@ -48,4 +50,5 @@
     <string name="restore_failed">恢复失败，或许是权限不足</string>
     <string name="unknown_error">未知错误</string>
     <string name="no_data">No Data</string>
+    <string name="check_update">[ 检查更新 ]</string>
 </resources>

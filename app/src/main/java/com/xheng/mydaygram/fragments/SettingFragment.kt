@@ -16,7 +16,6 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.core.view.isVisible
 import com.hjq.permissions.OnPermissionCallback
 import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
@@ -197,9 +196,11 @@ class SettingFragment: BaseFragment(), View.OnClickListener {
         // 监听按钮的点击事件
         appraise.setOnClickListener(this)
 
-        val test = view.findViewById<Button>(R.id.test)
-        test.isVisible = false
-
+        val check = view.findViewById<Button>(R.id.check_update)
+        // 设置按钮的字体
+        check.typeface = app.getAttrs("Arvil_Sans")
+        // 监听按钮的点击事件
+        check.setOnClickListener(this)
 
         // 初始化设置字体大小的按钮
         for (i in 0..4) {
@@ -270,6 +271,7 @@ class SettingFragment: BaseFragment(), View.OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         loadSettings()
+        (activity as MainActivity).update.delete()
     }
 
     override fun onClick(p0: View?) {
@@ -289,9 +291,14 @@ class SettingFragment: BaseFragment(), View.OnClickListener {
 
             // 评价按钮
             R.id.appraise -> {
-                (activity as MainActivity).toast("还是不要评价了吧...")
-
+                Toast.makeText(context, "还是不要评价了吧...", Toast.LENGTH_SHORT).show()
             }
+
+            // 检查更新
+            R.id.check_update -> {
+                (activity as MainActivity).updateTask()
+            }
+
             R.id.use_sidebar_on -> {
                 useSideBar.isSelected = true
                 noSideBar.isSelected = false

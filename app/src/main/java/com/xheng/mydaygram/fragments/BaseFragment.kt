@@ -1,5 +1,7 @@
 package com.xheng.mydaygram.fragments
 
+import android.os.Bundle
+import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.fragment.app.Fragment
@@ -19,9 +21,9 @@ open class BaseFragment: Fragment() {
             AnimationUtils.loadAnimation(activity, R.anim.activity_out)
     }
 
-    override fun onPause() {
-//        MainScope().cancel()
-        super.onPause()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+//        (activity as MainActivity).update.delete()
+//        (activity as MainActivity).update.install(requireContext())
     }
-
 }

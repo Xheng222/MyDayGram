@@ -1,8 +1,9 @@
 package com.xheng.mydaygram
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.os.Bundle
-import android.util.Log
+import android.os.Environment
 import android.view.KeyEvent
 import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
@@ -11,6 +12,8 @@ import com.xheng.mydaygram.application.MyLitePalApplication
 import com.xheng.mydaygram.fragments.*
 import com.xheng.mydaygram.utils.UpdateTask
 import kotlinx.coroutines.*
+import org.json.JSONObject
+import java.io.File
 
 
 class MainActivity : FragmentActivity() {
@@ -84,6 +87,7 @@ class MainActivity : FragmentActivity() {
                 app.isLocked = true
             }
         }
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -91,7 +95,6 @@ class MainActivity : FragmentActivity() {
         setContentView(R.layout.activity_main)
 
         app.isLocked = false
-
         supportFragmentManager.beginTransaction()
             .addToBackStack(null)
             .replace(R.id.fragmentContainerView, MainFragment, "MainFragment")
@@ -130,24 +133,93 @@ class MainActivity : FragmentActivity() {
 
     }
 
+    // 更新任务的 job
     private var job: Job? = null
-    override fun onPause() {
+    val update = UpdateTask(this)
+
+
+
+    @SuppressLint("ResourceAsColor")
+    fun updateTask() {
+        // 删除旧安装包
+        update.delete()
+        // 设置提示
+        val toast = Toast(applicationContext)
+        toast.setText("正在检查更新...")
+        toast.duration = Toast.LENGTH_SHORT
+        toast.show()
+
+        // 防止重复点击
         job?.cancel()
-        super.onPause()
 
-    }
-
-
-    fun toast(string: String): Job? {
-        job?.cancel()
-        val update = UpdateTask()
         job = MainScope().async {
+            // 延时
+            delay(500)
+
+            // 获取 json 文件
             val json = update.checkJSON()
-            Log.e("MyDayGram", json.getString("version"))
-            Toast.makeText(applicationContext, "还是不要评价了吧...", Toast.LENGTH_SHORT).show()
+
+            // 取消提示 toast
+            toast.cancel()
+
+            // 没有更新
+            if (json == null) {
+                Toast.makeText(applicationContext, "已是最新版本~", Toast.LENGTH_SHORT).show()
+            } else {
+                // 获取更新日志
+                val jsonArray = json.getJSONArray("update")
+                val str = StringBuilder()
+                str.append("更新内容：" + "\n")
+                for (i in 0 until jsonArray.length()) {
+                    val jsonObject = JSONObject(jsonArray.getString(i))
+                    str.append(" - " + jsonObject.getString("String") + "\n")
+                }
+                // apk不存在则直接下载
+                if (!File(this@MainActivity.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), json.getString("version") + ".apk").exists()) {
+                    // 创建对话框
+                    val dialog = AlertDialog.Builder(this@MainActivity)
+                        .setTitle("DayGram 可更新至版本 " + json.getString("version"))
+                        .setMessage(str.toString())
+                        .setPositiveButton(R.string.button_download){ _, _ ->
+                            // 开始下载
+                            update.download()
+                        }
+                        .setNegativeButton(R.string.button_cancel, null)
+                        .show()
+                    dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(R.color.colorAccent)
+                    dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(R.color.colorAccent)
+                } else {
+                    when (update.id) {
+                        -10L or -1L -> {
+                            val dialog = AlertDialog.Builder(this@MainActivity)
+                                .setTitle("DayGram 可更新至版本 " + json.getString("version"))
+                                .setMessage(str.toString())
+                                .setPositiveButton(R.string.button_download_complete){ _, _ ->
+                                    // 开始下载
+                                    update.install(this@MainActivity)
+                                }
+                                .setNegativeButton(R.string.button_cancel, null)
+                                .show()
+                            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(R.color.colorAccent)
+                            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(R.color.colorAccent)
+                        }
+
+                        else -> {
+                            val dialog = AlertDialog.Builder(this@MainActivity)
+                                .setTitle("DayGram 可更新至版本 " + json.getString("version"))
+                                .setMessage(str.toString())
+                                .setPositiveButton(R.string.button_download_continue, null)
+                                .setNegativeButton(R.string.button_cancel, null)
+                                .show()
+                            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(R.color.colorAccent)
+                            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(R.color.colorAccent)
+                        }
+                    }
+                }
+
+
+            }
         }
-        update.download(applicationContext)
-        return job
     }
 
 
