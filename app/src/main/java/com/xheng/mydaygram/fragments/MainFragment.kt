@@ -16,6 +16,7 @@ import android.widget.*
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.xheng.mydaygram.MainActivity
 import com.xheng.mydaygram.R
 import com.xheng.mydaygram.adapter.ChooseMonthAdapter
@@ -318,7 +319,6 @@ class MainFragment: BaseFragment(), Runnable, View.OnClickListener, AdapterView.
         // 获取被点击的子项所对应的日记
         val diary = p0?.getItemAtPosition(p2) as Diary
         selectDay = diary.getDay()
-        Log.e("MyDayGram", diary.getYear().toString())
 
         val bundle = Bundle()
         bundle.putInt("year", diary.getYear())
@@ -350,23 +350,44 @@ class MainFragment: BaseFragment(), Runnable, View.OnClickListener, AdapterView.
         // 当被点击的子项所用于的日记内容不为空时，执行删除操作
         if (diary.getDiary() != "") {
             // 创建指定样式的对话框
-            val dialog = AlertDialog.Builder(requireContext())
+            val dialog = MaterialAlertDialogBuilder(requireContext())
                 .setTitle("DayGram")
                 .setMessage(String.format(resources.getString(R.string.context_delete_confirm), diary.getYear(), diary.getMonth(), diary.getDay()))
                 .setPositiveButton(R.string.button_ok) { _, _ ->
                     LitePal.deleteAll<Diary>("year = ? and month = ? and day = ?",
                         diary.getYear().toString(), diary.getMonth().toString(), diary.getDay().toString())
 
+                    myListView.animate()
+                        .alpha(0f)
+                        .setDuration(270)
+                        .setListener(object: Animator.AnimatorListener {
+                            override fun onAnimationStart(p0: Animator) {}
+                            override fun onAnimationCancel(p0: Animator){}
+                            override fun onAnimationRepeat(p0: Animator) {}
+                            override fun onAnimationEnd(p0: Animator) {
+                                myListView.animate()
+                                    .alpha(1f)
+                                    .setDuration(270)
+                                    .setListener(object: Animator.AnimatorListener {
+                                        override fun onAnimationStart(p0: Animator) {
+                                            loadDiary()
+                                            if (isItemType2)
+                                                diaryAdapter2.notifyDataSetChanged()
+                                            else
+                                                diaryAdapter1.notifyDataSetChanged()
+                                        }
+                                        override fun onAnimationEnd(p0: Animator) {}
+                                        override fun onAnimationCancel(p0: Animator) {}
+                                        override fun onAnimationRepeat(p0: Animator) {}
+                                    })
+                            }
+                        })
                         // 重新加载日记集合
-                        loadDiary()
-                        diaryAdapter1.notifyDataSetChanged()
-                        diaryAdapter2.notifyDataSetChanged()
 
                 }
                 .setNegativeButton(R.string.button_cancel, null)
                 .show()
-            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(R.color.colorAccent)
-            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(R.color.colorAccent)
+            dialog.window?.setWindowAnimations(R.style.material_dialog)
         }
         return true
     }
@@ -538,11 +559,7 @@ class MainFragment: BaseFragment(), Runnable, View.OnClickListener, AdapterView.
 
         // 当 ListView 底部滑动到最大内偏距并且手指不是抛动时
         if (isBlock){
-            Log.e("MyDayGram", "准备跳转至 Search Fragment")
             (activity as MainActivity).switchFragment("SearchFragment", null)
-
-            //addToday?.setBackgroundResource(R.drawable.add_today)
-
         }
     }
 

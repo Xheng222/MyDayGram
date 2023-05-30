@@ -1,13 +1,14 @@
 package com.xheng.mydaygram
 
 import android.annotation.SuppressLint
-import android.app.AlertDialog
 import android.os.Bundle
 import android.os.Environment
 import android.view.KeyEvent
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentTransaction
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.xheng.mydaygram.application.MyLitePalApplication
 import com.xheng.mydaygram.fragments.*
 import com.xheng.mydaygram.utils.UpdateTask
@@ -177,7 +178,7 @@ class MainActivity : FragmentActivity() {
                 // apk不存在则直接下载
                 if (!File(this@MainActivity.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), json.getString("version") + ".apk").exists()) {
                     // 创建对话框
-                    val dialog = AlertDialog.Builder(this@MainActivity)
+                    val dialog = MaterialAlertDialogBuilder(this@MainActivity)
                         .setTitle("DayGram 可更新至版本 " + json.getString("version"))
                         .setMessage(str.toString())
                         .setPositiveButton(R.string.button_download){ _, _ ->
@@ -186,8 +187,7 @@ class MainActivity : FragmentActivity() {
                         }
                         .setNegativeButton(R.string.button_cancel, null)
                         .show()
-                    dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(R.color.colorAccent)
-                    dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(R.color.colorAccent)
+                    dialog.window?.setWindowAnimations(R.style.material_dialog)
                 } else {
                     when (update.id) {
                         -10L or -1L -> {
@@ -200,8 +200,7 @@ class MainActivity : FragmentActivity() {
                                 }
                                 .setNegativeButton(R.string.button_cancel, null)
                                 .show()
-                            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(R.color.colorAccent)
-                            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(R.color.colorAccent)
+                            dialog.window?.setWindowAnimations(R.style.material_dialog)
                         }
 
                         else -> {
@@ -211,8 +210,7 @@ class MainActivity : FragmentActivity() {
                                 .setPositiveButton(R.string.button_download_continue, null)
                                 .setNegativeButton(R.string.button_cancel, null)
                                 .show()
-                            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(R.color.colorAccent)
-                            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(R.color.colorAccent)
+                            dialog.window?.setWindowAnimations(R.style.material_dialog)
                         }
                     }
                 }

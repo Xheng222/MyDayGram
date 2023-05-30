@@ -15,7 +15,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.hjq.permissions.OnPermissionCallback
 import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
@@ -121,7 +121,7 @@ class SettingFragment: BaseFragment(), View.OnClickListener {
         }
     }
 
-    fun backup() {
+    private fun backup() {
         // 获取资源
         val res = resources
 
@@ -129,7 +129,7 @@ class SettingFragment: BaseFragment(), View.OnClickListener {
         val backupTask = BackupTask()
 
         // 创建对话框
-        AlertDialog.Builder(requireContext())
+        val dialog = MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.app_name)
             .setItems(
                 arrayOf(
@@ -138,17 +138,20 @@ class SettingFragment: BaseFragment(), View.OnClickListener {
                 )
             ) { _, which ->
                 when (which) {
-                    0 ->
-                        AlertDialog.Builder(requireContext())
+                    0 -> {
+                        val dialog = MaterialAlertDialogBuilder(requireContext())
                             .setTitle(R.string.app_name)
                             .setMessage(R.string.setting_backup_confirm)
                             .setPositiveButton(R.string.button_ok) {
-                                _, _ -> backupTask.backup(0, requireContext())
+                                    _, _ -> backupTask.backup(0, requireContext())
                             }
                             .setNegativeButton(R.string.button_cancel, null)
                             .show()
-                    1 ->
-                        AlertDialog.Builder(requireContext())
+                        dialog.window?.setWindowAnimations(R.style.material_dialog)
+                    }
+
+                    1 -> {
+                        val dialog = MaterialAlertDialogBuilder(requireContext())
                             .setTitle(R.string.app_name)
                             .setMessage(R.string.setting_restore_confirm)
                             .setPositiveButton(R.string.button_ok) {
@@ -156,9 +159,12 @@ class SettingFragment: BaseFragment(), View.OnClickListener {
                             }
                             .setNegativeButton(R.string.button_cancel, null)
                             .show()
+                        dialog.window?.setWindowAnimations(R.style.material_dialog)
+                    }
+
                 }
             }.show()
-
+        dialog.window?.setWindowAnimations(R.style.material_dialog)
     }
 
     @SuppressLint("MissingInflatedId", "SetTextI18n", "DiscouragedApi")
@@ -355,7 +361,6 @@ class SettingFragment: BaseFragment(), View.OnClickListener {
 
                 // 当密码存在时
                 if (settings.getBoolean("passwordOn", false)) {
-                    Log.e("MyDayGram", "password_off")
                     val bundle = Bundle()
                     bundle.putInt("mode", 4)
                     (activity as MainActivity).switchFragment("PasswordFragment", bundle)
@@ -380,7 +385,7 @@ class SettingFragment: BaseFragment(), View.OnClickListener {
                 // 获取资源
                 val res = resources
                 // 创建对话框
-                AlertDialog.Builder(requireContext())
+                MaterialAlertDialogBuilder(requireContext())
                     .setTitle(R.string.app_name)
                     .setItems(
                         arrayOf<String>(

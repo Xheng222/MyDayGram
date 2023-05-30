@@ -32,8 +32,8 @@
     <string name="password_enter_old">请输入旧密码</string>
     <string name="password_failed">密码错误</string>
     <string name="setting_backup">BACKUP / RESTORE</string>
-    <string name="setting_backup_sd_backup">Backup | Local</string>
-    <string name="setting_backup_sd_restore">Restore | Local</string>
+    <string name="setting_backup_sd_backup">Backup to Local</string>
+    <string name="setting_backup_sd_restore">Restore from Local</string>
     <string name="setting_backup_confirm">是否将日记内容备份至外部存储？</string>
     <string name="setting_restore_confirm">是否将备份至外部存储的日记内容恢复至手机？注意，恢复后，手机内的日记内容将会被覆盖。</string>
     <string name="setting_export">EXPORT</string>
