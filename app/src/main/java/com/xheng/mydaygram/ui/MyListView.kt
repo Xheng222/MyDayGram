@@ -5,7 +5,6 @@ import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import android.util.AttributeSet
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -66,7 +65,6 @@ class MyListView: ListView, AbsListView.OnScrollListener{
     }
 
     // 初始化ListView
-    @SuppressLint("InflateParams")
     private fun initListView(context: Context){
         // 滚动监听
         setOnScrollListener(this)
@@ -132,6 +130,7 @@ class MyListView: ListView, AbsListView.OnScrollListener{
     }
 
     // 处理屏幕触摸事件
+
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(ev: MotionEvent?): Boolean {
         when(ev?.action){

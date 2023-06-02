@@ -10,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
-import androidx.core.content.contentValuesOf
 import com.xheng.mydaygram.R
 import com.xheng.mydaygram.application.MyLitePalApplication
 import com.xheng.mydaygram.model.Diary

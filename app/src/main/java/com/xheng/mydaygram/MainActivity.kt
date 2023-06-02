@@ -2,13 +2,18 @@ package com.xheng.mydaygram
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
+import android.os.Environment
 import android.view.KeyEvent
-import androidx.fragment.app.Fragment
+import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentTransaction
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.xheng.mydaygram.application.MyLitePalApplication
 import com.xheng.mydaygram.fragments.*
+import com.xheng.mydaygram.utils.UpdateTask
+import kotlinx.coroutines.*
+import org.json.JSONObject
+import java.io.File
 
 
 class MainActivity : FragmentActivity() {
@@ -82,6 +87,7 @@ class MainActivity : FragmentActivity() {
                 app.isLocked = true
             }
         }
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -89,7 +95,6 @@ class MainActivity : FragmentActivity() {
         setContentView(R.layout.activity_main)
 
         app.isLocked = false
-
         supportFragmentManager.beginTransaction()
             .addToBackStack(null)
             .replace(R.id.fragmentContainerView, MainFragment, "MainFragment")
@@ -107,7 +112,7 @@ class MainActivity : FragmentActivity() {
         if (keyCode == KeyEvent.KEYCODE_BACK && supportFragmentManager.backStackEntryCount >= 1) {
             // app 上锁情况下，直接返回 true （即禁用了返回键功能）
             if (app.isLocked)
-                    return true
+                return true
 
             if (supportFragmentManager.backStackEntryCount == 1) {
                 //退出程序
@@ -124,26 +129,90 @@ class MainActivity : FragmentActivity() {
     @SuppressLint("MissingSuperCall")
     override fun onSaveInstanceState(outState: Bundle) {
         // 阻止activity保存 fragment 的状态
-        //super.onSaveInstanceState(outState)
+        // super.onSaveInstanceState(outState)
 
     }
 
-//    fun freshMainFragment() {
-//        MainFragment.fresh()
-//    }
-//
-//    fun freshSearch() {
-//        SearchFragment.fresh()
-//    }
-//
-//    fun freshSet() {
-//        SettingFragment.loadSettings()
-//    }
+    // 更新任务的 job
+    private var job: Job? = null
+    val update = UpdateTask(this)
 
-//    override fun onPause() {
-//
-//
-//        super.onPause()
-//        Log.e("e", "a")
-//    }
+
+
+    @SuppressLint("ResourceAsColor")
+    fun updateTask() {
+        // 设置提示
+        val toast = Toast(applicationContext)
+        toast.setText("正在检查更新...")
+        toast.duration = Toast.LENGTH_SHORT
+        toast.show()
+
+        // 防止重复点击
+        job?.cancel()
+
+        job = MainScope().async {
+            // 延时
+            delay(500)
+
+            // 获取 json 文件
+            val json = update.checkJSON()
+
+            // 取消提示 toast
+            toast.cancel()
+
+            // 没有更新
+            if (json == null) {
+                Toast.makeText(applicationContext, "已是最新版本~", Toast.LENGTH_SHORT).show()
+            } else {
+                // 获取更新日志
+                val jsonArray = json.getJSONArray("update")
+                val str = StringBuilder()
+                str.append("更新内容：" + "\n")
+                for (i in 0 until jsonArray.length()) {
+                    val jsonObject = JSONObject(jsonArray.getString(i))
+                    str.append(" - " + jsonObject.getString("String") + "\n")
+                }
+                // apk不存在则直接下载
+                if (!File(this@MainActivity.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), json.getString("version") + ".apk").exists()) {
+                    // 创建对话框
+                    val dialog = MaterialAlertDialogBuilder(this@MainActivity)
+                        .setTitle("DayGram 可更新至版本 " + json.getString("version"))
+                        .setMessage(str.toString())
+                        .setPositiveButton(R.string.button_download){ _, _ ->
+                            // 开始下载
+                            update.download()
+                        }
+                        .setNegativeButton(R.string.button_cancel, null)
+                        .show()
+                    dialog.window?.setWindowAnimations(R.style.material_dialog)
+                } else {
+                    when (update.id) {
+                        -10L or -1L -> {
+                            val dialog = MaterialAlertDialogBuilder(this@MainActivity)
+                                .setTitle("DayGram 可更新至版本 " + json.getString("version"))
+                                .setMessage(str.toString())
+                                .setPositiveButton(R.string.button_download_complete){ _, _ ->
+                                    // 开始下载
+                                    update.install(this@MainActivity)
+                                }
+                                .setNegativeButton(R.string.button_cancel, null)
+                                .show()
+                            dialog.window?.setWindowAnimations(R.style.material_dialog)
+                        }
+
+                        else -> {
+                            val dialog = MaterialAlertDialogBuilder(this@MainActivity)
+                                .setTitle("DayGram 可更新至版本 " + json.getString("version"))
+                                .setMessage(str.toString())
+                                .setPositiveButton(R.string.button_download_continue, null)
+                                .setNegativeButton(R.string.button_cancel, null)
+                                .show()
+                            dialog.window?.setWindowAnimations(R.style.material_dialog)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 }

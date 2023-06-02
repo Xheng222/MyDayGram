@@ -1,17 +1,24 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.Material3.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimaryDark</item>
         <item name="colorPrimaryDark">#F2F1ED</item>
         <item name="colorAccent">@android:color/transparent</item>
-        <item name="alertDialogTheme">@style/AppCompatAlertDialogStyle</item>
+        <item name="materialAlertDialogTheme">@style/AppCompatAlertDialogStyle</item>
         <item name="android:windowLightStatusBar">@color/colorPrimaryDark</item>
     </style>
 
-    <style name="AppCompatAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert" />
+    <style name="AppCompatAlertDialogStyle" parent="ThemeOverlay.Material3.MaterialAlertDialog" >
+        <item name="android:background">@color/global </item>
+        <item name="android:windowBackground">@color/transport</item>
 
+        <item name="android:windowIsTranslucent">false</item>
+
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimAmount">0.6</item>
+    </style>
 
     <style name="ChooserDialog" parent="Theme.AppCompat.Light.Dialog">
         <item name="android:windowFrame">@null</item>
@@ -43,6 +50,11 @@
     <style name="ChooserAnimation">
         <item name="android:windowEnterAnimation">@anim/dialog_in</item>
         <item name="android:windowExitAnimation">@anim/dialog_out</item>
+    </style>
+
+    <style name="material_dialog">
+        <item name="android:windowEnterAnimation">@anim/material_dialog_in</item>
+        <item name="android:windowExitAnimation">@anim/material_dialog_out</item>
     </style>
 
 </resources>

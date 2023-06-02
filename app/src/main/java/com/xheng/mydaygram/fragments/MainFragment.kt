@@ -10,16 +10,14 @@ import android.os.Handler
 import android.os.Looper
 import android.os.Message
 import android.util.DisplayMetrics
-import android.util.Log
 import android.view.*
 import android.widget.*
-import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.xheng.mydaygram.MainActivity
 import com.xheng.mydaygram.R
-
 import com.xheng.mydaygram.adapter.ChooseMonthAdapter
 import com.xheng.mydaygram.adapter.ChooseYearAdapter
 import com.xheng.mydaygram.adapter.DiaryAdapter
@@ -115,11 +113,6 @@ class MainFragment: BaseFragment(), Runnable, View.OnClickListener, AdapterView.
         }
     }
 
-//    fun fresh() {
-//        loadDiary()
-//        refresh()
-//    }
-
     //刷新界面
     private fun refresh() {
         if(!isItemType2){
@@ -127,7 +120,7 @@ class MainFragment: BaseFragment(), Runnable, View.OnClickListener, AdapterView.
             // 将 ListView 滚动到合适的项
             handler?.postDelayed({
                 myListView.smoothScrollToPosition(selectDay)
-            }, 135)
+            }, 500)
 
         } else {
             diaryAdapter2.notifyDataSetChanged()
@@ -159,7 +152,7 @@ class MainFragment: BaseFragment(), Runnable, View.OnClickListener, AdapterView.
     }
 
     //加载日记
-    private fun loadDiary(){
+    private fun loadDiary(): Boolean{
         val results =
             LitePal.where("year = ? and month = ?", selectedYear.toString(), selectedMonth.toString())
                 .order("day")
@@ -167,9 +160,8 @@ class MainFragment: BaseFragment(), Runnable, View.OnClickListener, AdapterView.
 
         // 清空日记集合
         diaries.clear()
-
+        noDiary.isVisible = false
         if(isItemType2) {
-
             if (results.isEmpty()) {
                 noDiary.isVisible = true
             } else {
@@ -208,7 +200,9 @@ class MainFragment: BaseFragment(), Runnable, View.OnClickListener, AdapterView.
                 }
             }
         }
-
+        if (results.isEmpty())
+            return false
+        return true
     }
 
     private fun loadSettings(){
@@ -221,7 +215,7 @@ class MainFragment: BaseFragment(), Runnable, View.OnClickListener, AdapterView.
             showWeek?.setTextColor(Color.parseColor("#4B4B48"))
             verticalLine?.setBackgroundColor(Color.parseColor("#494949"))
             showTime?.setTextColor(Color.parseColor("#797872"))
-        }, 500)
+        }, 0)
 
     }
 
@@ -231,7 +225,6 @@ class MainFragment: BaseFragment(), Runnable, View.OnClickListener, AdapterView.
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Log.e("MyDayGram", "开始创建 Main Fragment")
         val view = inflater.inflate(R.layout.fragment_main, container, false)
 
         // 获取 noDiary 实例，设为不可见
@@ -300,18 +293,6 @@ class MainFragment: BaseFragment(), Runnable, View.OnClickListener, AdapterView.
         return view
     }
 
-    override fun onStop() {
-        Log.e("MyDayGram", "Main Fragment onStop")
-        super.onStop()
-    }
-
-//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-//        super.onViewCreated(view, savedInstanceState)
-//        Log.e("MyDayGram", selectDay.toString())
-//        super.onResume()
-//        loadSettings()
-//        isPause = false
-//    }
 
     override fun onResume() {
         super.onResume()
@@ -330,13 +311,11 @@ class MainFragment: BaseFragment(), Runnable, View.OnClickListener, AdapterView.
 
     // 处理 ListView 的点击事件
     override fun onItemClick(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-        Log.e("MyDayGram", "点击")
         // 记录被点击的子项索引
         this.position = p2
         // 获取被点击的子项所对应的日记
         val diary = p0?.getItemAtPosition(p2) as Diary
         selectDay = diary.getDay()
-        Log.e("MyDayGram", diary.getYear().toString())
 
         val bundle = Bundle()
         bundle.putInt("year", diary.getYear())
@@ -366,25 +345,46 @@ class MainFragment: BaseFragment(), Runnable, View.OnClickListener, AdapterView.
         // 获取被点击的子项所对应的日记
         val diary = p0?.getItemAtPosition(p2) as Diary
         // 当被点击的子项所用于的日记内容不为空时，执行删除操作
-        if (diary.getDiary() != null) {
+        if (diary.getDiary() != "") {
             // 创建指定样式的对话框
-            val dialog = AlertDialog.Builder(requireContext())
+            val dialog = MaterialAlertDialogBuilder(requireContext())
                 .setTitle("DayGram")
                 .setMessage(String.format(resources.getString(R.string.context_delete_confirm), diary.getYear(), diary.getMonth(), diary.getDay()))
                 .setPositiveButton(R.string.button_ok) { _, _ ->
                     LitePal.deleteAll<Diary>("year = ? and month = ? and day = ?",
                         diary.getYear().toString(), diary.getMonth().toString(), diary.getDay().toString())
 
+                    myListView.animate()
+                        .alpha(0f)
+                        .setDuration(270)
+                        .setListener(object: Animator.AnimatorListener {
+                            override fun onAnimationStart(p0: Animator) {}
+                            override fun onAnimationCancel(p0: Animator){}
+                            override fun onAnimationRepeat(p0: Animator) {}
+                            override fun onAnimationEnd(p0: Animator) {
+                                myListView.animate()
+                                    .alpha(1f)
+                                    .setDuration(270)
+                                    .setListener(object: Animator.AnimatorListener {
+                                        override fun onAnimationStart(p0: Animator) {
+                                            loadDiary()
+                                            if (isItemType2)
+                                                diaryAdapter2.notifyDataSetChanged()
+                                            else
+                                                diaryAdapter1.notifyDataSetChanged()
+                                        }
+                                        override fun onAnimationEnd(p0: Animator) {}
+                                        override fun onAnimationCancel(p0: Animator) {}
+                                        override fun onAnimationRepeat(p0: Animator) {}
+                                    })
+                            }
+                        })
                         // 重新加载日记集合
-                        loadDiary()
-                        diaryAdapter1.notifyDataSetChanged()
-                        diaryAdapter2.notifyDataSetChanged()
 
                 }
                 .setNegativeButton(R.string.button_cancel, null)
                 .show()
-            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(R.color.colorAccent)
-            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(R.color.colorAccent)
+            dialog.window?.setWindowAnimations(R.style.material_dialog)
         }
         return true
     }
@@ -528,7 +528,6 @@ class MainFragment: BaseFragment(), Runnable, View.OnClickListener, AdapterView.
 
             //转到设置
             R.id.go_setting -> {
-
                 (activity as MainActivity).switchFragment("SettingFragment", null)
             }
         }
@@ -556,11 +555,7 @@ class MainFragment: BaseFragment(), Runnable, View.OnClickListener, AdapterView.
 
         // 当 ListView 底部滑动到最大内偏距并且手指不是抛动时
         if (isBlock){
-            Log.e("MyDayGram", "准备跳转至 Search Fragment")
             (activity as MainActivity).switchFragment("SearchFragment", null)
-
-            //addToday?.setBackgroundResource(R.drawable.add_today)
-
         }
     }
 
@@ -569,12 +564,15 @@ class MainFragment: BaseFragment(), Runnable, View.OnClickListener, AdapterView.
             .alpha(0f)
             .setDuration(135)
             .setListener(object: Animator.AnimatorListener{
-                override fun onAnimationStart(p0: Animator) {}
                 override fun onAnimationCancel(p0: Animator) {}
                 override fun onAnimationRepeat(p0: Animator) {}
+                override fun onAnimationStart(p0: Animator) {
+                    noDiary.animate()
+                        .alpha(0f)
+                        .setDuration(135)
+                        .setListener(null)
+                }
                 override fun onAnimationEnd(p0: Animator) {
-                    //myListView.visibility =View.INVISIBLE
-
                     // 设置对应的适配器
                     myListView.adapter = if (isItemType2) diaryAdapter2 else diaryAdapter1
 
@@ -587,25 +585,10 @@ class MainFragment: BaseFragment(), Runnable, View.OnClickListener, AdapterView.
 
                     // 播放动画
                     if (isItemType2) {
-                        Log.e("MyDayGram", "nodata")
-
                         noDiary.animate()
                             .alpha(1f)
                             .setDuration(135)
                             .setListener(null)
-                    } else {
-                        noDiary.animate()
-                            .alpha(0f)
-                            .setDuration(135)
-                            .setListener(object : Animator.AnimatorListener {
-                                override fun onAnimationStart(p0: Animator) {}
-                                override fun onAnimationCancel(p0: Animator) {}
-                                override fun onAnimationRepeat(p0: Animator) {}
-                                override fun onAnimationEnd(p0: Animator) {
-                                    Log.e("MyDayGram", "nodata false")
-                                    noDiary.isInvisible = true
-                                }
-                            })
                     }
                     myListView.animate()
                         .alpha(1f)
@@ -614,6 +597,5 @@ class MainFragment: BaseFragment(), Runnable, View.OnClickListener, AdapterView.
                 }
             })
     }
-
 
 }

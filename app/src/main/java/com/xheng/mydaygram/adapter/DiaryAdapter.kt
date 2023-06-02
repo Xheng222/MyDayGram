@@ -3,7 +3,6 @@ package com.xheng.mydaygram.adapter
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
-import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -16,7 +15,6 @@ import androidx.core.view.isVisible
 import com.xheng.mydaygram.R
 import com.xheng.mydaygram.application.MyLitePalApplication
 import com.xheng.mydaygram.model.Diary
-import com.xheng.mydaygram.ui.MyListView
 import com.xheng.mydaygram.ui.MyTextView
 
 class DiaryAdapter(
@@ -29,7 +27,7 @@ class DiaryAdapter(
 
     // 内部 ViewHolder 类
     class ViewHolder(
-        val itemView: View
+        itemView: View
     ){
         val dot: ImageView = itemView.findViewById(R.id.dot)
         val diary1: LinearLayout = itemView.findViewById(R.id.diary1_layout)
@@ -38,28 +36,6 @@ class DiaryAdapter(
         val showContent: MyTextView = itemView.findViewById(R.id.diary_content)
         val horizontalLine: View = itemView.findViewById(R.id.horizontal_line)
         val verticalLine: View = itemView.findViewById(R.id.vertical_line)
-    }
-
-    // 更新数据
-    private fun update(listView: MyListView, position: Int, diary: Diary){
-        // 将最新的日记覆盖到 ListView 的日记集合
-        diaries[position - 1] = diary
-        // 获取第一个可见的子项位置
-        val first = listView.firstVisiblePosition
-        // 创建需要更新的子项
-        val view = listView.getChildAt(position - first)
-        // 调用 getView 更新子项
-        getView(position - 1, view, listView)
-    }
-
-    // 删除日记
-    fun delete(listView: MyListView, position: Int){
-        // 获取需要重置的日记
-        val diary = diaries[position - 1]
-        // 将其内容设置空
-        diary.setDiary(null)
-        // 更新 ListView 单条数据
-        update(listView, position, diary)
     }
 
     // 获取 ListView 子项所对应的位置

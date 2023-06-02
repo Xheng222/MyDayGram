@@ -3,20 +3,17 @@ package com.xheng.mydaygram.fragments
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Typeface
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.util.TypedValue
-import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import androidx.core.content.ContextCompat
@@ -72,12 +69,7 @@ class DiaryFragment: BaseFragment(), View.OnClickListener {
                 diary.setDiary("")
             else
                 diary.setDiary(diaryEditor.text.toString())
-            if (diary.save())
-                Log.e("MyDayGram", "成功保存日记")
-
-            else
-                Log.e("MyDayGram", "保存日记失败")
-
+            diary.save()
         } else if (results.isNotEmpty()) {
             if (diaryEditor.text.toString().trim().isEmpty())
                 diary.setDiary("")
@@ -85,8 +77,6 @@ class DiaryFragment: BaseFragment(), View.OnClickListener {
                 diary.setDiary(diaryEditor.text.toString())
             diary.updateAll("year = ? and month = ? and day = ?",
                 year.toString(), month.toString(), day.toString())
-
-            Log.e("MyDayGram", "成功更新日记")
         }
     }
 
@@ -201,10 +191,7 @@ class DiaryFragment: BaseFragment(), View.OnClickListener {
 
             // 完成日记
             R.id.floating_done -> {
-                saveDiary()
-//                (activity as MainActivity).freshMainFragment()
-//                (activity as MainActivity).freshSearch()
-                activity?.onKeyDown(KeyEvent.KEYCODE_BACK, null)
+                (activity as MainActivity).pop()
             }
         }
     }

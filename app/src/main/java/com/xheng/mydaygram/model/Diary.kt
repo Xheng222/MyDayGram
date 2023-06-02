@@ -1,12 +1,6 @@
 package com.xheng.mydaygram.model
 
-import android.os.Parcel
-import android.os.Parcelable
-import android.os.Parcelable.Creator
 import org.litepal.crud.LitePalSupport
-import java.time.DayOfWeek
-import java.time.Month
-import java.time.Year
 
 //日记类
 class Diary() : LitePalSupport() {

@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
-import androidx.core.view.setMargins
 import androidx.recyclerview.widget.RecyclerView
 import com.xheng.mydaygram.R
 import com.xheng.mydaygram.application.MyLitePalApplication
@@ -66,9 +65,9 @@ class ChooseYearAdapter(
         val year = years[position]
 
         // 设置年份按钮的点击事件
-        holder.selectYear.setOnClickListener(View.OnClickListener {
+        holder.selectYear.setOnClickListener {
             onItemClickListener.onItemClick(year)
-        })
+        }
 
         // 获取年份按钮的布局参数，控件的布局参数必须与父布局一样，父布局为 LinearLayout，故转换成 LinearLayout.LayoutParams
         val layoutParams  = holder.selectYear.layoutParams as LinearLayout.LayoutParams

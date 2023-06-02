@@ -10,8 +10,6 @@ import org.litepal.extension.find
 class ExportTask {
     private val app = MyLitePalApplication.getInstance()
 
-    private val res = app.resources
-
     // 定义导出的内容
     private lateinit var diary: String
 
@@ -21,15 +19,15 @@ class ExportTask {
 
         val builder = StringBuilder()
 
-        if (all.isNotEmpty()) {
+        diary = if (all.isNotEmpty()) {
             for (diary in all) {
                 val date = String.format(format, app.getMonth(diary.getMonth()), diary.getDay(), app.getWeek(diary.getWeek()), diary.getYear()) + "\n\n"
                 builder.append(date + diary.getDiary() + "\n\n")
             }
 
-            diary = builder.toString()
+            builder.toString()
         } else {
-            diary = ""
+            ""
         }
     }
 

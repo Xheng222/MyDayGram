@@ -1,7 +1,6 @@
 package com.xheng.mydaygram.fragments
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
@@ -9,7 +8,6 @@ import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -161,9 +159,7 @@ class PasswordFragment: BaseFragment() {
 
                         (activity as MainActivity).pop()
                         app.isLocked = false
-//                        (activity as MainActivity).switchFragment("MainFragment", null)
-//                        onPause()
-//
+
                     } else
                         passwordError(hintText.text.toString())
                 }
@@ -334,15 +330,9 @@ class PasswordFragment: BaseFragment() {
     }
 
     override fun onPause() {
-        val manager = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val manager = requireActivity().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         manager.hideSoftInputFromWindow(view.windowToken, 0)
-//        if (mode != 1) (activity as MainActivity).freshSet()
         super.onPause()
     }
 
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Log.e("MyDayGram", "password fragment onCreate()")
-    }
 }

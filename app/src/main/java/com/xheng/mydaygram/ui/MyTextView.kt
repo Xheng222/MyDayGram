@@ -1,6 +1,5 @@
 package com.xheng.mydaygram.ui
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.TypedArray
 import android.util.AttributeSet

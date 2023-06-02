@@ -64,9 +64,9 @@ class ChooseMonthAdapter(
         val month = months[position]
 
         // 设置月份按钮的点击事件
-        holder.selectMonth.setOnClickListener(View.OnClickListener {
+        holder.selectMonth.setOnClickListener {
             onItemClickListener.onItemClick(month)
-        })
+        }
 
         // 获取月份按钮的布局参数，控件的布局参数必须与父布局一样，父布局为 LinearLayout，故转换成 LinearLayout.LayoutParams
         val layoutParams  = holder.selectMonth.layoutParams as LinearLayout.LayoutParams
@@ -101,8 +101,8 @@ class ChooseMonthAdapter(
             holder.selectMonth.isEnabled = false
         } else {
             // 将月份图片的透明度设置为 225 ，并可选
-            holder.selectMonth.setImageAlpha(255)
-            holder.selectMonth.setEnabled(true)
+            holder.selectMonth.imageAlpha = 255
+            holder.selectMonth.isEnabled = true
         }
 
         // 当月份不是用户所选中的月份时
