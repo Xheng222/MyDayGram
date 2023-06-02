@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.os.Environment
 import android.view.KeyEvent
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -113,7 +112,7 @@ class MainActivity : FragmentActivity() {
         if (keyCode == KeyEvent.KEYCODE_BACK && supportFragmentManager.backStackEntryCount >= 1) {
             // app 上锁情况下，直接返回 true （即禁用了返回键功能）
             if (app.isLocked)
-                    return true
+                return true
 
             if (supportFragmentManager.backStackEntryCount == 1) {
                 //退出程序
@@ -130,7 +129,7 @@ class MainActivity : FragmentActivity() {
     @SuppressLint("MissingSuperCall")
     override fun onSaveInstanceState(outState: Bundle) {
         // 阻止activity保存 fragment 的状态
-        super.onSaveInstanceState(outState)
+        // super.onSaveInstanceState(outState)
 
     }
 
@@ -142,8 +141,6 @@ class MainActivity : FragmentActivity() {
 
     @SuppressLint("ResourceAsColor")
     fun updateTask() {
-        // 删除旧安装包
-        update.delete()
         // 设置提示
         val toast = Toast(applicationContext)
         toast.setText("正在检查更新...")
@@ -191,7 +188,7 @@ class MainActivity : FragmentActivity() {
                 } else {
                     when (update.id) {
                         -10L or -1L -> {
-                            val dialog = AlertDialog.Builder(this@MainActivity)
+                            val dialog = MaterialAlertDialogBuilder(this@MainActivity)
                                 .setTitle("DayGram 可更新至版本 " + json.getString("version"))
                                 .setMessage(str.toString())
                                 .setPositiveButton(R.string.button_download_complete){ _, _ ->
@@ -204,7 +201,7 @@ class MainActivity : FragmentActivity() {
                         }
 
                         else -> {
-                            val dialog = AlertDialog.Builder(this@MainActivity)
+                            val dialog = MaterialAlertDialogBuilder(this@MainActivity)
                                 .setTitle("DayGram 可更新至版本 " + json.getString("version"))
                                 .setMessage(str.toString())
                                 .setPositiveButton(R.string.button_download_continue, null)
@@ -214,11 +211,8 @@ class MainActivity : FragmentActivity() {
                         }
                     }
                 }
-
-
             }
         }
     }
-
 
 }

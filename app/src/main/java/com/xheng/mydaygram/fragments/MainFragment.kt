@@ -10,7 +10,6 @@ import android.os.Handler
 import android.os.Looper
 import android.os.Message
 import android.util.DisplayMetrics
-import android.util.Log
 import android.view.*
 import android.widget.*
 import androidx.core.view.isVisible
@@ -121,7 +120,7 @@ class MainFragment: BaseFragment(), Runnable, View.OnClickListener, AdapterView.
             // 将 ListView 滚动到合适的项
             handler?.postDelayed({
                 myListView.smoothScrollToPosition(selectDay)
-            }, 135)
+            }, 500)
 
         } else {
             diaryAdapter2.notifyDataSetChanged()
@@ -216,7 +215,7 @@ class MainFragment: BaseFragment(), Runnable, View.OnClickListener, AdapterView.
             showWeek?.setTextColor(Color.parseColor("#4B4B48"))
             verticalLine?.setBackgroundColor(Color.parseColor("#494949"))
             showTime?.setTextColor(Color.parseColor("#797872"))
-        }, 500)
+        }, 0)
 
     }
 
@@ -226,7 +225,6 @@ class MainFragment: BaseFragment(), Runnable, View.OnClickListener, AdapterView.
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Log.e("MyDayGram", "开始创建 Main Fragment")
         val view = inflater.inflate(R.layout.fragment_main, container, false)
 
         // 获取 noDiary 实例，设为不可见
@@ -313,7 +311,6 @@ class MainFragment: BaseFragment(), Runnable, View.OnClickListener, AdapterView.
 
     // 处理 ListView 的点击事件
     override fun onItemClick(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-        Log.e("MyDayGram", "点击")
         // 记录被点击的子项索引
         this.position = p2
         // 获取被点击的子项所对应的日记
@@ -531,7 +528,6 @@ class MainFragment: BaseFragment(), Runnable, View.OnClickListener, AdapterView.
 
             //转到设置
             R.id.go_setting -> {
-
                 (activity as MainActivity).switchFragment("SettingFragment", null)
             }
         }
@@ -601,6 +597,5 @@ class MainFragment: BaseFragment(), Runnable, View.OnClickListener, AdapterView.
                 }
             })
     }
-
 
 }

@@ -19,15 +19,15 @@ class ExportTask {
 
         val builder = StringBuilder()
 
-        if (all.isNotEmpty()) {
+        diary = if (all.isNotEmpty()) {
             for (diary in all) {
                 val date = String.format(format, app.getMonth(diary.getMonth()), diary.getDay(), app.getWeek(diary.getWeek()), diary.getYear()) + "\n\n"
                 builder.append(date + diary.getDiary() + "\n\n")
             }
 
-            diary = builder.toString()
+            builder.toString()
         } else {
-            diary = ""
+            ""
         }
     }
 

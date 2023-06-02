@@ -8,7 +8,6 @@ import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,6 +23,8 @@ import com.xheng.mydaygram.R
 import com.xheng.mydaygram.ui.MyTextView
 import com.xheng.mydaygram.utils.BackupTask
 import com.xheng.mydaygram.utils.ExportTask
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 
 class SettingFragment: BaseFragment(), View.OnClickListener {
 
@@ -87,7 +88,7 @@ class SettingFragment: BaseFragment(), View.OnClickListener {
             settings.edit().putInt("preview.type", index).apply()
         }
     }
-    fun loadSettings() {
+    private fun loadSettings() {
 
         val fontSize = settings.getInt("font.size", 2)
         fontSizes[fontSize]!!.isSelected = true
@@ -284,7 +285,6 @@ class SettingFragment: BaseFragment(), View.OnClickListener {
         when(p0?.id) {
             // 反馈按钮
             R.id.send_feedback -> {
-                Log.e("MyDayGram", "R.id.send_feedback")
                 val res = resources
                 // 创建跳转到邮箱 App 的 Intent
                 val intent = Intent("android.intent.action.SENDTO", Uri.fromParts("mailto", "xheng222@163.com", null))
@@ -302,7 +302,11 @@ class SettingFragment: BaseFragment(), View.OnClickListener {
 
             // 检查更新
             R.id.check_update -> {
-                (activity as MainActivity).updateTask()
+
+                MainScope().launch {
+                    (activity as MainActivity).updateTask()
+                }
+
             }
 
             R.id.use_sidebar_on -> {
@@ -388,7 +392,7 @@ class SettingFragment: BaseFragment(), View.OnClickListener {
                 MaterialAlertDialogBuilder(requireContext())
                     .setTitle(R.string.app_name)
                     .setItems(
-                        arrayOf<String>(
+                        arrayOf(
                             res.getString(R.string.setting_export_as_mail),
                             res.getString(R.string.setting_export_as_text)
                         )

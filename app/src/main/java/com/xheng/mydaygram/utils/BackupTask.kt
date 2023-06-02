@@ -2,7 +2,6 @@ package com.xheng.mydaygram.utils
 
 import android.content.Context
 import android.os.Environment
-import android.util.Log
 import android.widget.Toast
 import com.xheng.mydaygram.R
 import com.xheng.mydaygram.application.MyLitePalApplication
@@ -42,7 +41,6 @@ class BackupTask {
                 MainScope().launch {
                     // 当数据库不存在时
                     if (!dataBaseFile.exists()) {
-                        Log.e("MyDayGram", resources.getString(R.string.database_not_found))
                         Toast.makeText(context, resources.getString(R.string.database_not_found), Toast.LENGTH_SHORT).show()
                     } else {
 
@@ -53,13 +51,10 @@ class BackupTask {
                             }
                                 // 复制数据库到副本文件
                                 backFile(dataBaseFile, backupFile)
-
-                                Log.e("MyDayGram", resources.getString(R.string.backup_success))
                                 Toast.makeText(context, resources.getString(R.string.backup_success), Toast.LENGTH_SHORT).show()
 
                         } catch (e: Exception) {
                             e.printStackTrace()
-                            Log.e("MyDayGram", resources.getString(R.string.backup_failed))
                             Toast.makeText(context, resources.getString(R.string.backup_failed), Toast.LENGTH_SHORT).show()
                         }
                     }
@@ -70,25 +65,20 @@ class BackupTask {
                 MainScope().launch {
                     // 当数据库副本不存在时
                     if (!backupFile.exists()) {
-                        Log.e("MyDayGram", resources.getString(R.string.backup_not_found))
                         Toast.makeText(context, resources.getString(R.string.backup_not_found), Toast.LENGTH_SHORT).show()
                     } else {
                         try {
                             // 复制数据库副本到数据库
                             backFile(backupFile, dataBaseFile)
-
-                            Log.e("MyDayGram", resources.getString(R.string.restore_success))
                             Toast.makeText(context, resources.getString(R.string.restore_success), Toast.LENGTH_SHORT).show()
 
                         } catch (e: Exception) {
-                            Log.e("MyDayGram", resources.getString(R.string.restore_failed))
                             Toast.makeText(context, resources.getString(R.string.restore_failed), Toast.LENGTH_SHORT).show()
                         }
                     }
                 }
             }
             else -> {
-                Log.e("MyDayGram", resources.getString(R.string.unknown_error))
                 Toast.makeText(context, resources.getString(R.string.unknown_error), Toast.LENGTH_SHORT).show()
             }
         }
